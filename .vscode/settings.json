@@ -14,8 +14,16 @@
     "libtwips_ffi.h": "c"
   },
   "[ruby]": {
-    "editor.defaultFormatter": "rubocop.vscode-rubocop"
+    "editor.defaultFormatter": "Shopify.ruby-lsp"
   },
-  "rubocop.commandPath": "env RUBY_TS_ON_CWD_MISMATCH=ignore ./script/ruby.ts -S rubocop",
-  "rubocop.bundleCommandPath": "env RUBY_TS_ON_CWD_MISMATCH=ignore ./script/ruby.ts -S bundle"
+  "rubyLsp.rubyVersionManager": {
+    "identifier": "custom"
+  },
+  // "rubyLsp.customRubyCommand": "env RUBY_TS_ON_CWD_MISMATCH=ignore ./script/ruby.ts",
+  // "rubyLsp.customRubyCommand": "RUBY_TS_ON_CWD_MISMATCH=ignore PATH=./script/bin:$PATH",
+  "rubyLsp.customRubyCommand": "/Users/lgarron/Code/git/github.com/lgarron/dotfiles/scripts/debug/yeet-env-macOS.ts",
+  // "rubyLsp.customRubyCommand": "rv ruby run 3.4.6 -- -e \"system(\\\"bash\\\")\"",
+  // "rubyLsp.customRubyCommand": "rv shell init fish | source",
+  "rubyLsp.bundleGemfile": "./src/ruby-gem/Gemfile",
+  "rubyLsp.formatter": "rubocop"
 }
