@@ -2,6 +2,6 @@
   "recommendations": [
     "rust-lang.rust-analyzer",
     "biomejs.biome",
-    "xaver.clang-format"
+    "rubocop.vscode-rubocop"
   ]
 }

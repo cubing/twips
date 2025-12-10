@@ -198,19 +198,23 @@ lint-js-tsc: setup-js build-rust-wasm
 format-js: setup-js
 	bun x @biomejs/biome check --write
 
-RUBY_GEM_DIR = ./src/ruby-gem/
-RUBY_VERSION = $(shell cat ./src/ruby-gem/.ruby-version)
-RUBY = rv ruby run ${RUBY_VERSION} -- -C ./src/ruby-gem/
+RUBY = env RUBY_TS_ON_CWD_MISMATCH=ignore ./script/ruby.ts --
 
 .PHONY: test-ruby
 test-ruby: build-ruby
-	${RUBY} ./test/test-api.rb
+	${RUBY} ./test/test_api.rb
 	# TODO: https://github.com/spinel-coop/rv/issues/233
 	${RUBY} -e "system(\"cargo test --package twips-rb\")"
 
 .PHONY: lint-ruby
 lint-ruby:
 	bun run -- script/ruby-version/check.ts
+	${RUBY} -S rubocop
+
+.PHONY: format-ruby
+format: format-ruby
+format-ruby:
+	${RUBY} -S rubocop --autocorrect
 
 .PHONY: build-ruby
 build-ruby: setup-ruby

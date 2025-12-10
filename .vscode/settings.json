@@ -12,5 +12,10 @@
     "*.html": "html",
     "*.Makefile": "makefile",
     "libtwips_ffi.h": "c"
-  }
+  },
+  "[ruby]": {
+    "editor.defaultFormatter": "rubocop.vscode-rubocop"
+  },
+  "rubocop.commandPath": "env RUBY_TS_ON_CWD_MISMATCH=ignore ./script/ruby.ts -S rubocop",
+  "rubocop.bundleCommandPath": "env RUBY_TS_ON_CWD_MISMATCH=ignore ./script/ruby.ts -S bundle"
 }
