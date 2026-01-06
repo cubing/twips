@@ -21,6 +21,7 @@ use crate::{
 };
 
 use cubing::{alg::Alg, kpuzzle::KPattern};
+use num_integer::Integer;
 use rand::{seq::SliceRandom, Rng};
 
 use crate::{
@@ -152,24 +153,32 @@ impl Default for Square1ScrambleFinder {
     }
 }
 
+fn normalize_amount(r#move: &mut Option<Move>) {
+    if let Some(r#move) = r#move {
+        r#move.amount = (r#move.amount + 5).mod_floor(&12) - 5;
+    };
+}
+
 fn flush_tuple(
     #[allow(non_snake_case)] current_tuple_U: &mut Option<Move>,
     #[allow(non_snake_case)] current_tuple_D: &mut Option<Move>,
     alg_builder: &mut AlgBuilder,
 ) {
     if current_tuple_U.is_some() || current_tuple_D.is_some() {
+        #[allow(non_snake_case)]
+        let mut current_tuple_U = current_tuple_U.take();
+        normalize_amount(&mut current_tuple_U);
+        #[allow(non_snake_case)]
+        let mut current_tuple_D = current_tuple_D.take();
+        normalize_amount(&mut current_tuple_D);
         let grouping = Grouping {
             alg: Alg {
                 nodes: vec![
                     cubing::alg::AlgNode::MoveNode(
-                        current_tuple_U
-                            .take()
-                            .unwrap_or_else(|| parse_move!("U_SQ_0").to_owned()),
+                        current_tuple_U.unwrap_or_else(|| parse_move!("U_SQ_0").to_owned()),
                     ),
                     cubing::alg::AlgNode::MoveNode(
-                        current_tuple_D
-                            .take()
-                            .unwrap_or_else(|| parse_move!("D_SQ_0").to_owned()),
+                        current_tuple_D.unwrap_or_else(|| parse_move!("D_SQ_0").to_owned()),
                     ),
                 ],
             }
@@ -209,19 +218,19 @@ fn group_square_1_tuples(alg: Alg) -> Alg {
         } else if r#move.quantum == U_SQ_0.quantum {
             #[allow(non_snake_case)]
             if let Some(current_tuple_U) = &mut current_tuple_U {
-                // TODO: handle normalization elsewhere.
-                current_tuple_U.amount = (current_tuple_U.amount + r#move.amount + 5) % 12 - 5;
+                current_tuple_U.amount += r#move.amount;
             } else {
                 current_tuple_U = Some(r#move);
             }
+            normalize_amount(&mut current_tuple_U); // TODO: come up with a good convention for leaving this for the end.
         } else if r#move.quantum == D_SQ_0.quantum {
             #[allow(non_snake_case)]
             if let Some(current_tuple_D) = &mut current_tuple_D {
-                // TODO: handle normalization elsewhere.
-                current_tuple_D.amount = (current_tuple_D.amount + r#move.amount + 5) % 12 - 5;
+                current_tuple_D.amount += r#move.amount;
             } else {
                 current_tuple_D = Some(r#move);
             }
+            normalize_amount(&mut current_tuple_D); // TODO: come up with a good convention for leaving this for the end.
         } else {
             panic!("Invalid Square-1 scramble alg in internal code.");
         }
@@ -408,5 +417,25 @@ impl SolvingBasedScrambleFinder for Square1ScrambleFinder {
 impl GetKPuzzle for Square1ScrambleFinder {
     fn get_kpuzzle(&self) -> &'static KPuzzle {
         square1_unbandaged_kpuzzle()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use cubing::alg::parse_alg;
+
+    use crate::scramble::{
+        puzzles::square1::square1_scramble_finder::Square1ScrambleFinder,
+        scramble_finder::solving_based_scramble_finder::SolvingBasedScrambleFinder,
+    };
+
+    #[test]
+    fn normalization() -> Result<(), String> {
+        let mut square1_scramble_finder = Square1ScrambleFinder::default();
+        assert_eq!(
+            &(square1_scramble_finder.collapse_inverted_alg(parse_alg!("U_SQ_6'").to_owned())),
+            parse_alg!("(6, 0)")
+        );
+        Ok(())
     }
 }
