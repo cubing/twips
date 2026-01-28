@@ -26,15 +26,15 @@ test-warning:
 test-scripts:
 	bun run -- 'script/cubing-def.ts' 2x2x2
 
-RM = bun -e 'process.argv.slice(1).map(p => process.getBuiltinModule("node:fs").rmSync(p, {recursive: true, force: true, maxRetries: 5}))' --
+RM_RF = bun -e 'process.argv.slice(1).map(p => process.getBuiltinModule("node:fs").rmSync(p, {recursive: true, force: true, maxRetries: 5}))' --
 
 .PHONY: clean
 clean:
-	${RM} ./.temp ./build ./dist ./src/js/generated-wasm/twips.* ./package-lock.json
+	${RM_RF} ./.temp ./build ./dist ./src/js/generated-wasm/twips.* ./package-lock.json
 
 .PHONY: reset
 reset: clean
-	${RM} ./emsdk ./node_modules ./target ./.bin
+	${RM_RF} ./emsdk ./node_modules ./target ./.bin
 
 .PHONY: lint
 lint: lint-js lint-rust
