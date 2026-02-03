@@ -3,37 +3,27 @@
 // TOOD: remove this once https://github.com/oven-sh/bun/issues/5846 is implemented.
 // TODO: turn this into a package?
 
+import { readFile } from "node:fs/promises";
 import { exit } from "node:process";
-import { satisfies } from "compare-versions";
-import { Path } from "path-class";
-import { PrintableShellCommand } from "printable-shell-command";
+import { $, semver } from "bun";
 
-const { engines } = await new Path("./package.json").readJSON<{
-  engines: Record<string, string>;
-}>();
+const { engines } = JSON.parse(await readFile("./package.json", "utf-8"));
 
 let exitCode = 0;
 
-async function checkEngine(
-  engineID: string,
-  versionCommand: PrintableShellCommand,
-) {
+async function checkEngine(engineID: string, versionCommand: $.ShellPromise) {
   const engineRequirement = engines[engineID];
 
   let engineVersion: string;
   try {
-    engineVersion = (await versionCommand.stdout().text()).trim();
+    engineVersion = (await versionCommand.text()).trim();
   } catch (_) {
-    console.error(
-      `Command failed while getting version:
-
-  ${versionCommand.getPrintableCommand({ mainIndentation: "    " })}`,
-    );
+    console.error(`Command failed while getting version for: ${engineID}`);
     exitCode = 1;
     return;
   }
 
-  if (!satisfies(engineVersion, engineRequirement)) {
+  if (!semver.satisfies(engineVersion, engineRequirement)) {
     console.error(
       `Current version of \`${engineID}\` is out of date: ${engineVersion}`,
     );
@@ -44,9 +34,10 @@ async function checkEngine(
 }
 
 async function checkEngines(): Promise<void> {
+  const a = $`bun --version`;
   await Promise.all([
-    checkEngine("bun", new PrintableShellCommand("bun", ["--version"])),
-    checkEngine("node", new PrintableShellCommand("node", ["--version"])),
+    checkEngine("bun", a),
+    checkEngine("node", $`node --version`),
   ]);
 }
 

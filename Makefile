@@ -191,7 +191,7 @@ setup-js-deps: check-engine-versions
 	bun install --frozen-lockfile > /dev/null
 
 .PHONY: lint-js
-lint-js: lint-js-biome lint-js-tsc
+lint-js: lint-js-biome lint-js-tsc lint-import-restrictions
 
 .PHONY: lint-js-biome
 lint-js-biome: setup-js
@@ -200,6 +200,10 @@ lint-js-biome: setup-js
 .PHONY: lint-js-tsc
 lint-js-tsc: setup-js build-rust-wasm
 	bun x -- bun-dx --package typescript tsc -- --noEmit --project ./tsconfig.json
+
+.PHONY: lint-import-restrictions
+lint-import-restrictions: build-rust-wasm
+	bun run -- './script/lint-import-restrictions.ts'
 
 .PHONY: format-js
 format-js: setup-js
