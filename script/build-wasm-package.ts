@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env -S bun run --
 
 import assert from "node:assert";
 import { es2022Lib } from "@cubing/dev-config/esbuild/es2022";

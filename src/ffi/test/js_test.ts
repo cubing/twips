@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env -S bun run --
 
 import { dlopen, FFIType, suffix } from "bun:ffi";
 import { default as assert } from "node:assert";

@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env -S bun run --
 
 // This script is a workaround to avoid triggering https://github.com/jj-vcs/jj/discussions/4709 for known dirs.
 

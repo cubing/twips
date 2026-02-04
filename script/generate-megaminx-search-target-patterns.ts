@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env -S bun run --
 
 import { writeFile } from "node:fs/promises";
 import type { Move } from "cubing/alg";

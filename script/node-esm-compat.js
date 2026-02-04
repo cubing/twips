@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env -S bun run --
 
 import { readFile, writeFile } from "node:fs/promises";
 
