@@ -2,14 +2,6 @@ import { checkAllowedImports } from "@cubing/dev-config/check-allowed-imports";
 
 await checkAllowedImports(
   {
-    ".config": {
-      entryPoints: ["./script/check-engine-versions.ts"],
-      allowedImports: {
-        "script/check-engine-versions.ts": {
-          static: ["bun", "node:fs/promises", "node:process"],
-        },
-      },
-    },
     script: {
       entryPoints: ["./script/**/*.ts"],
       allowedImports: {
@@ -36,7 +28,12 @@ await checkAllowedImports(
           static: ["cubing"],
         },
         "script/check-engine-versions.ts": {
-          static: ["node:fs/promises", "node:process", "bun"],
+          static: [
+            "node:fs/promises",
+            "node:process",
+            "bun",
+            "../package.json",
+          ],
         },
         "script/check-import-restrictions.ts": {
           static: ["@cubing/dev-config"],
@@ -67,6 +64,7 @@ await checkAllowedImports(
   {
     overrideEsbuildOptions: {
       loader: { ".wasm": "binary" },
+      external: ["../package.json"],
     },
   },
 );

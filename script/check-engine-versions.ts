@@ -3,15 +3,16 @@
 // TOOD: remove this once https://github.com/oven-sh/bun/issues/5846 is implemented.
 // TODO: turn this into a package?
 
-import { readFile } from "node:fs/promises";
 import { exit } from "node:process";
 import { $, semver } from "bun";
-
-const { engines } = JSON.parse(await readFile("./package.json", "utf-8"));
+import { engines } from "../package.json" with { type: "json" };
 
 let exitCode = 0;
 
-async function checkEngine(engineID: string, versionCommand: $.ShellPromise) {
+async function checkEngine(
+  engineID: "bun" | "node",
+  versionCommand: $.ShellPromise,
+) {
   const engineRequirement = engines[engineID];
 
   let engineVersion: string;
@@ -25,7 +26,7 @@ async function checkEngine(engineID: string, versionCommand: $.ShellPromise) {
 
   if (!semver.satisfies(engineVersion, engineRequirement)) {
     console.error(
-      `Current version of \`${engineID}\` is out of date: ${engineVersion}`,
+      `Current version of \`${engineID}\` does not satisfy requirement: ${engineVersion}`,
     );
     console.error(`Version of \`${engineID}\` required: ${engineRequirement}`);
     exitCode = 1;
