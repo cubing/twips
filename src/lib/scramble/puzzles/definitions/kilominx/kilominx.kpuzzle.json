@@ -138,6 +138,12 @@
     "x2": "Rv2 Fv Uv'",
     "Rw": "Rv DL",
     "Uw": "Uv D",
-    "Fw": "Fv B"
+    "Fw": "Fv B",
+    "Lw": "Lv DR",
+    "r": "Rw",
+    "u": "Uw",
+    "f": "Fw",
+    "l": "Lw",
+    "Lv": "[Uv2': Rv]"
   }
 }

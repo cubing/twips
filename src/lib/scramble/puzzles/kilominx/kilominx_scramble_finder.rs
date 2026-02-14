@@ -1,5 +1,5 @@
 use cubing::{
-    alg::{parse_alg, Alg, Move},
+    alg::Alg,
     kpuzzle::{KPattern, KPuzzle},
 };
 use rand::Rng;
@@ -10,17 +10,14 @@ use crate::{
         search::{filter::filtering_decision::FilteringDecision, move_count::MoveCount},
     },
     experimental_lib_api::{
-        ConstantAlgSearchPhase, KPuzzleSimpleMaskPhase, KPuzzleSimpleMaskPhaseConstructionOptions,
-        MultiPhaseSearch, MultiPhaseSearchOptions,
+        KPuzzleSimpleMaskPhase, KPuzzleSimpleMaskPhaseConstructionOptions, MultiPhaseSearch,
+        MultiPhaseSearchOptions,
     },
     scramble::{
         collapse::collapse_adjacent_moves,
         get_kpuzzle::GetKPuzzle,
         puzzles::{
-            definitions::{
-                kilominx_phase2_mask_kpattern, kilominx_phase2_target_kpattern,
-                kilominx_phase3_target_kpattern,
-            },
+            definitions::kilominx_phase1_target_kpattern,
             kpattern_to_ktransformation::invert_kpattern_as_transformation,
         },
         randomize::{OrbitPermutationConstraint, OrbitRandomizationConstraints},
@@ -32,21 +29,14 @@ use crate::{
     },
 };
 
-use super::{
-    super::{
-        super::randomize::{randomize_orbit, OrbitOrientationConstraint},
-        canonicalizing_solved_kpattern_depth_filter::{
-            CanonicalizingSolvedKPatternDepthFilter,
-            CanonicalizingSolvedKPatternDepthFilterConstructionParameters,
-        },
-        definitions::{kilominx_kpuzzle, kilominx_orientation_canonicalization_kpattern},
+use super::super::{
+    super::randomize::{randomize_orbit, OrbitOrientationConstraint},
+    canonicalizing_solved_kpattern_depth_filter::{
+        CanonicalizingSolvedKPatternDepthFilter,
+        CanonicalizingSolvedKPatternDepthFilterConstructionParameters,
     },
-    phase1::KilominxPhase1Search,
+    definitions::{kilominx_kpuzzle, kilominx_orientation_canonicalization_kpattern},
 };
-
-pub fn kilominx_front_moves() -> Vec<Move> {
-    move_list_from_vec(vec!["U", "L", "F", "R", "FL", "FR"])
-}
 
 #[allow(non_snake_case)] // Move meanings are case sensitive.
 pub(crate) struct KilominxScrambleFinder {
@@ -77,35 +67,11 @@ impl Default for KilominxScrambleFinder {
         let multi_phase_search = MultiPhaseSearch::try_new(
             kpuzzle.clone(),
             vec![
-                // TODO: skip phases 1 and its following `x2` when none of the back pieces are on the back.
-                Box::new(KilominxPhase1Search::default()),
-                Box::new(ConstantAlgSearchPhase {
-                    phase_name: "first flip".to_owned(),
-                    alg: parse_alg!("x2").to_owned(),
-                }),
                 Box::new(
                     KPuzzleSimpleMaskPhase::try_new(
-                        "solve B pieces on F".to_owned(),
-                        kilominx_phase2_mask_kpattern().clone(),
-                        kilominx_front_moves(),
-                        KPuzzleSimpleMaskPhaseConstructionOptions {
-                            masked_target_patterns: Some(vec![
-                                kilominx_phase2_target_kpattern().clone()
-                            ]),
-                            ..Default::default()
-                        },
-                    )
-                    .unwrap(),
-                ),
-                Box::new(ConstantAlgSearchPhase {
-                    phase_name: "second flip".to_owned(),
-                    alg: parse_alg!("x2").to_owned(),
-                }),
-                Box::new(
-                    KPuzzleSimpleMaskPhase::try_new(
-                        "solve DL and D".to_owned(),
-                        kilominx_phase3_target_kpattern().clone(),
-                        move_list_from_vec(vec!["U", "L", "F", "R", "FL", "FR", "D"]),
+                        "solve D and B".to_owned(),
+                        kilominx_phase1_target_kpattern().clone(),
+                        move_list_from_vec(vec!["U", "F", "R", "L", "u", "f", "r", "l"]),
                         KPuzzleSimpleMaskPhaseConstructionOptions {
                             ..Default::default()
                         },
@@ -115,9 +81,9 @@ impl Default for KilominxScrambleFinder {
                 Box::new(
                     // TODO: we're not masking, there should probably be something simpler than `KPuzzleSimpleMaskPhase` for us to use.
                     KPuzzleSimpleMaskPhase::try_new(
-                        "solve <U, F, R>".to_owned(),
+                        "solve <U, F, R, L>".to_owned(),
                         kpuzzle.default_pattern().clone(),
-                        move_list_from_vec(vec!["U", "F", "R"]),
+                        move_list_from_vec(vec!["U", "F", "R", "L"]),
                         KPuzzleSimpleMaskPhaseConstructionOptions {
                             ..Default::default()
                         },

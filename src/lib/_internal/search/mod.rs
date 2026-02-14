@@ -1,4 +1,3 @@
-pub(crate) mod blank_prune_table;
 pub mod coordinates;
 pub mod filter;
 pub(crate) mod hash_prune_table;
