@@ -7,7 +7,11 @@ use rand::Rng;
 use crate::{
     _internal::{
         errors::SearchError,
-        search::{filter::filtering_decision::FilteringDecision, move_count::MoveCount},
+        search::{
+            filter::filtering_decision::FilteringDecision,
+            move_count::MoveCount,
+            search_logger::{SearchLogger, VerbosityLevel},
+        },
     },
     experimental_lib_api::{
         KPuzzleSimpleMaskPhase, KPuzzleSimpleMaskPhaseConstructionOptions, MultiPhaseSearch,
@@ -73,6 +77,9 @@ impl Default for KilominxScrambleFinder {
                         kilominx_phase1_target_kpattern().clone(),
                         move_list_from_vec(vec!["U", "F", "R", "L", "u", "f", "r", "l"]),
                         KPuzzleSimpleMaskPhaseConstructionOptions {
+                            search_logger: Some(SearchLogger {
+                                verbosity: VerbosityLevel::Info,
+                            }),
                             ..Default::default()
                         },
                     )
@@ -85,6 +92,9 @@ impl Default for KilominxScrambleFinder {
                         kpuzzle.default_pattern().clone(),
                         move_list_from_vec(vec!["U", "F", "R", "L"]),
                         KPuzzleSimpleMaskPhaseConstructionOptions {
+                            search_logger: Some(SearchLogger {
+                                verbosity: VerbosityLevel::Info,
+                            }),
                             ..Default::default()
                         },
                     )
