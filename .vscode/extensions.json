@@ -1,3 +1,7 @@
 {
-  "recommendations": ["rust-lang.rust-analyzer", "biomejs.biome"]
+  "recommendations": [
+    "rust-lang.rust-analyzer",
+    "biomejs.biome",
+    "Shopify.ruby-lsp"
+  ]
 }

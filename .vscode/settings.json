@@ -7,5 +7,13 @@
   },
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"
-  }
+  },
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp"
+  },
+  "rubyLsp.rubyVersionManager": {
+    "identifier": "rv"
+  },
+  "rubyLsp.bundleGemfile": "./src/ruby-gem/Gemfile",
+  "rubyLsp.formatter": "rubocop"
 }

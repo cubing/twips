@@ -3,8 +3,10 @@
 // TOOD: remove this once https://github.com/oven-sh/bun/issues/5846 is implemented.
 // TODO: turn this into a package?
 
+import { platform } from "node:os";
 import { exit } from "node:process";
 import { $, semver } from "bun";
+// @ts-expect-error: Recent syntax only used in a script.
 import { engines } from "../package.json" with { type: "json" };
 
 let exitCode = 0;
@@ -12,7 +14,12 @@ let exitCode = 0;
 async function checkEngine(
   engineID: "bun" | "node",
   versionCommand: $.ShellPromise,
+  options?: { trimPrefix?: string; skipForOS?: Set<string> },
 ) {
+  if (options?.skipForOS?.has(platform())) {
+    console.info(`Skipping version check for ${engineID} on ${platform()}`);
+    return;
+  }
   const engineRequirement = engines[engineID];
 
   let engineVersion: string;
@@ -22,6 +29,14 @@ async function checkEngine(
     console.error(`Command failed while getting version for: ${engineID}`);
     exitCode = 1;
     return;
+  }
+  if (options?.trimPrefix) {
+    if (!engineVersion.startsWith(options.trimPrefix)) {
+      throw new Error(
+        "Version command output does not start with the expected prefix.",
+      );
+    }
+    engineVersion = engineVersion.slice(options.trimPrefix.length);
   }
 
   if (!semver.satisfies(engineVersion, engineRequirement)) {
@@ -35,10 +50,13 @@ async function checkEngine(
 }
 
 async function checkEngines(): Promise<void> {
-  const a = $`bun --version`;
   await Promise.all([
-    checkEngine("bun", a),
+    checkEngine("bun", $`bun --version`),
     checkEngine("node", $`node --version`),
+    checkEngine("rv", $`rv --version`, {
+      trimPrefix: "rv ",
+      skipForOS: new Set(["win32"]),
+    }),
   ]);
 }
 
