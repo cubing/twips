@@ -4,14 +4,14 @@ members = ["src/lib", "src/cli", "src/ffi", "src/wasm", "script/cargo-run-bin"]
 default-members = ["src/cli"]
 
 [workspace.package]
-version = "0.12.0"
+version = "0.12.1-dev"
 license = "MPL-2.0"
 edition = "2021"
 repository = "https://github.com/cubing/twips"
 
 [workspace.dependencies]
 cubing = "0.15.2"
-twips = { version = "0.12.0", path = "./src/lib/" }
+twips = { version = "0.12.1-dev", path = "./src/lib/" }
 
 [workspace.metadata.bin]
 cbindgen = { version = "0.27.0" }
