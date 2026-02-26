@@ -174,8 +174,8 @@ impl SolvingBasedScrambleFinder for TwoPhase3x3x3ScrambleFinder {
             ),
             TwoPhase3x3x3PrefixOrSuffixConstraints::ForFMC => {
                 let fmc_affix_alg = FMC_AFFIX_ALG.clone();
-                let a = fmc_affix_alg.invert();
-                let search_pattern = apply_pre_alg(pattern, &(a))
+                let fmc_affix_alg_inverse = fmc_affix_alg.invert();
+                let search_pattern = apply_pre_alg(pattern, &(fmc_affix_alg_inverse))
                     .unwrap()
                     .apply_alg(&fmc_affix_alg.invert())
                     .unwrap();
