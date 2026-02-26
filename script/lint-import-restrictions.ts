@@ -16,7 +16,10 @@ await checkAllowedImports(
             "esbuild",
             "node:assert",
             "node:fs/promises",
+            "node:os",
             "node:process",
+            "node:stream",
+            "node:util",
             "path-class",
             "printable-shell-command",
           ],
@@ -31,12 +34,16 @@ await checkAllowedImports(
           static: [
             "node:fs/promises",
             "node:process",
+            "node:os",
             "bun",
             "../package.json",
           ],
         },
         "script/check-import-restrictions.ts": {
           static: ["@cubing/dev-config"],
+        },
+        "script/ruby.ts": {
+          static: ["src/ruby-gem/.ruby-version"],
         },
       },
     },
@@ -63,8 +70,14 @@ await checkAllowedImports(
   },
   {
     overrideEsbuildOptions: {
-      loader: { ".wasm": "binary" },
+      loader: {
+        ".wasm": "binary",
+        // TODO: This should be enabled by configuring support for import assertions instead.
+        ".ruby-version": "copy",
+      },
       external: ["../package.json"],
+      // TODO: this doesn't work.
+      // supported: { "import-assertions": true },
     },
   },
 );
