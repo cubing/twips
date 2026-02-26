@@ -6,13 +6,12 @@
 import { platform } from "node:os";
 import { exit } from "node:process";
 import { $, semver } from "bun";
-// @ts-expect-error: Recent syntax only used in a script.
 import { engines } from "../package.json" with { type: "json" };
 
 let exitCode = 0;
 
 async function checkEngine(
-  engineID: "bun" | "node",
+  engineID: keyof typeof engines,
   versionCommand: $.ShellPromise,
   options?: { trimPrefix?: string; skipForOS?: Set<string> },
 ) {
