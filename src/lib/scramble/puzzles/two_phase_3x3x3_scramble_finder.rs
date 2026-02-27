@@ -14,7 +14,7 @@ use crate::{
             filter::filtering_decision::FilteringDecision,
             hash_prune_table::HashPruneTableSizeBounds,
             iterative_deepening::{
-                individual_search::IndividualSearchOptions,
+                individual_search::{CanonicalFSMSearchConstraints, IndividualSearchOptions},
                 iterative_deepening_search::{
                     ImmutableSearchData, ImmutableSearchDataConstructionOptions,
                     IterativeDeepeningSearch,
@@ -153,62 +153,57 @@ impl SolvingBasedScrambleFinder for TwoPhase3x3x3ScrambleFinder {
         // TODO: we pass premoves and postmoves to both phases in case the other
         // turns out to have an empty alg solution. We can handle this better by making
         // a way to bridge the FSM between phases.
-        let (
-            pre_alg,
-            search_pattern,
-            post_alg,
-            canonical_fsm_pre_moves_phase1,
-            canonical_fsm_post_moves_phase1,
-            canonical_fsm_pre_moves_phase2,
-            canonical_fsm_post_moves_phase2,
-        ) = match &scramble_options.prefix_or_suffix_constraints {
-            TwoPhase3x3x3PrefixOrSuffixConstraints::None => (
-                // TODO: output rotations for patterns in non-standard orientation?
-                Alg::default(),
-                pattern.clone(),
-                Alg::default(),
-                None,
-                None,
-                None,
-                None,
-            ),
-            TwoPhase3x3x3PrefixOrSuffixConstraints::ForFMC => {
-                let fmc_affix_alg = FMC_AFFIX_ALG.clone();
-                let fmc_affix_alg_inverse = fmc_affix_alg.invert();
-                let search_pattern = apply_pre_alg(pattern, &(fmc_affix_alg_inverse))
-                    .unwrap()
-                    .apply_alg(&fmc_affix_alg.invert())
-                    .unwrap();
-                // For the pre-moves, we don't have to specify R' and U' because we know the FSM only depends on the final `F` move.
-                // For similar reasons, we only have to specify R' for the post-moves.
-                (
-                    (fmc_affix_alg.clone()),
-                    search_pattern,
-                    (fmc_affix_alg.clone()),
-                    Some(vec![parse_move!("R").to_owned()]),
-                    Some(vec![parse_move!("F").to_owned()]),
-                    // TODO: support a way to specify a quantum factor
-                    Some(vec![parse_move!("R2'").to_owned()]),
-                    Some(vec![parse_move!("F2'").to_owned()]),
-                )
-            }
-            TwoPhase3x3x3PrefixOrSuffixConstraints::ForBLD => {
-                let masked_pattern =
-                    apply_mask(pattern, cube3x3x3_orientation_canonicalization_kpattern())
-                        .map_err(|err| SearchError {
-                            description: err.description,
-                        })?;
-                let Some(bld_prefix) = self
-                    .bld_orientation_search
-                    .search(&masked_pattern, Default::default(), Default::default())
-                    .next()
-                else {
-                    return Err("Could not apply orientation moves for BLD".into());
-                };
-                let pattern = pattern.apply_alg(&bld_prefix).unwrap();
-                (bld_prefix, pattern, Alg::default(), None, None, None, None)
-            }
-        };
+        let (pre_alg, search_pattern, post_alg, phase_1_fsm_constraints, phase_2_fsm_constraints) =
+            match &scramble_options.prefix_or_suffix_constraints {
+                TwoPhase3x3x3PrefixOrSuffixConstraints::None => (
+                    // TODO: output rotations for patterns in non-standard orientation?
+                    Alg::default(),
+                    pattern.clone(),
+                    Alg::default(),
+                    None,
+                    None,
+                ),
+                TwoPhase3x3x3PrefixOrSuffixConstraints::ForFMC => {
+                    let fmc_affix_alg = FMC_AFFIX_ALG.clone();
+                    let fmc_affix_alg_inverse = fmc_affix_alg.invert();
+                    let search_pattern = apply_pre_alg(pattern, &(fmc_affix_alg_inverse))
+                        .unwrap()
+                        .apply_alg(&fmc_affix_alg.invert())
+                        .unwrap();
+                    (
+                        (fmc_affix_alg.clone()),
+                        search_pattern,
+                        (fmc_affix_alg.clone()),
+                        Some(CanonicalFSMSearchConstraints {
+                            // For the pre-moves, we don't have to specify R' and U' because we know the FSM only depends on the final `F` move.
+                            // For similar reasons, we only have to specify R' for the post-moves.
+                            pre_moves: Some(vec![parse_move!("R").to_owned()]),
+                            post_moves: Some(vec![parse_move!("F'").to_owned()]),
+                        }),
+                        Some(CanonicalFSMSearchConstraints {
+                            // TODO: support a way to specify a quantum factor?
+                            pre_moves: Some(vec![parse_move!("R2'").to_owned()]),
+                            post_moves: Some(vec![parse_move!("F2'").to_owned()]),
+                        }),
+                    )
+                }
+                TwoPhase3x3x3PrefixOrSuffixConstraints::ForBLD => {
+                    let masked_pattern =
+                        apply_mask(pattern, cube3x3x3_orientation_canonicalization_kpattern())
+                            .map_err(|err| SearchError {
+                                description: err.description,
+                            })?;
+                    let Some(bld_prefix) = self
+                        .bld_orientation_search
+                        .search(&masked_pattern, Default::default(), Default::default())
+                        .next()
+                    else {
+                        return Err("Could not apply orientation moves for BLD".into());
+                    };
+                    let pattern = pattern.apply_alg(&bld_prefix).unwrap();
+                    (bld_prefix, pattern, Alg::default(), None, None)
+                }
+            };
 
         // dbg!(&search_pattern);
 
@@ -220,8 +215,7 @@ impl SolvingBasedScrambleFinder for TwoPhase3x3x3ScrambleFinder {
                 &phase1_search_pattern,
                 IndividualSearchOptions {
                     min_num_solutions: Some(1),
-                    canonical_fsm_pre_moves: canonical_fsm_pre_moves_phase1,
-                    canonical_fsm_post_moves: canonical_fsm_post_moves_phase1,
+                    fsm_constraints: phase_1_fsm_constraints,
                     ..Default::default()
                 },
                 Default::default(),
@@ -241,8 +235,7 @@ impl SolvingBasedScrambleFinder for TwoPhase3x3x3ScrambleFinder {
                     &phase2_search_pattern,
                     IndividualSearchOptions {
                         min_num_solutions: Some(1),
-                        canonical_fsm_pre_moves: canonical_fsm_pre_moves_phase2,
-                        canonical_fsm_post_moves: canonical_fsm_post_moves_phase2,
+                        fsm_constraints: phase_2_fsm_constraints,
                         ..Default::default()
                     },
                     Default::default(),

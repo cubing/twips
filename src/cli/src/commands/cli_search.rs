@@ -36,8 +36,7 @@ pub fn cli_search(search_command_args: SearchCommandArgs) -> Result<(), TwipsErr
                 min_num_solutions: search_command_args.optional.min_num_solutions,
                 min_depth_inclusive: search_command_args.optional.search_args.min_depth,
                 max_depth_exclusive: search_command_args.optional.search_args.max_depth,
-                canonical_fsm_pre_moves: None,
-                canonical_fsm_post_moves: None,
+                fsm_constraints: None,
                 root_continuation_condition: search_command_args
                     .optional
                     .search_args

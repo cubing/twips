@@ -14,6 +14,33 @@ use super::{
 // or panic instead?
 const MAX_SUPPORTED_SEARCH_DEPTH: Depth = Depth(500); // TODO: increase
 
+// TODO: make a way to map this to states: https://github.com/cubing/twips/issues/160
+#[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
+pub struct CanonicalFSMSearchConstraints {
+    pub pre_moves: Option<Vec<Move>>,
+    pub post_moves: Option<Vec<Move>>,
+}
+
+impl CanonicalFSMSearchConstraints {
+    pub fn pre_moves(
+        fsm_constraints: &Option<CanonicalFSMSearchConstraints>,
+    ) -> Option<&Vec<Move>> {
+        match fsm_constraints {
+            Some(fsm_constraints) => fsm_constraints.pre_moves.as_ref(),
+            None => None,
+        }
+    }
+
+    pub fn post_moves(
+        fsm_constraints: &Option<CanonicalFSMSearchConstraints>,
+    ) -> Option<&Vec<Move>> {
+        match fsm_constraints {
+            Some(fsm_constraints) => fsm_constraints.post_moves.as_ref(),
+            None => None,
+        }
+    }
+}
+
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct IndividualSearchOptions {
@@ -31,8 +58,7 @@ pub struct IndividualSearchOptions {
     pub min_depth_inclusive: Option<Depth>, // inclusive
     #[serde(rename = "maxDepth")] // TODO
     pub max_depth_exclusive: Option<Depth>, // exclusive
-    pub canonical_fsm_pre_moves: Option<Vec<Move>>,
-    pub canonical_fsm_post_moves: Option<Vec<Move>>,
+    pub fsm_constraints: Option<CanonicalFSMSearchConstraints>,
     // Recursive calls use modified continuation conditions derived from this.
     // This is called the "root" continuation condition to distinguish it from
     // the recursive ones.

@@ -13,6 +13,7 @@ use crate::_internal::{
     puzzle_traits::puzzle_traits::{HashablePatternPuzzle, SemiGroupActionPuzzle},
     search::{
         hash_prune_table::{HashPruneTable, HashPruneTableSizeBounds},
+        iterative_deepening::individual_search::CanonicalFSMSearchConstraints,
         pattern_stack::PatternStack,
         prune_table_trait::PruneTable,
     },
@@ -315,9 +316,11 @@ impl<TPuzzle: SemiGroupActionPuzzle> IterativeDeepeningSearch<TPuzzle> {
             let initial_state = self
                 .apply_optional_fsm_moves(
                     CANONICAL_FSM_START_STATE,
-                    &individual_search_data
-                        .individual_search_options
-                        .canonical_fsm_pre_moves,
+                    CanonicalFSMSearchConstraints::pre_moves(
+                        &individual_search_data
+                            .individual_search_options
+                            .fsm_constraints,
+                    ),
                 )
                 .expect("TODO: invalid canonical FSM pre-moves.");
             let recursion_result = self.recurse(
@@ -473,7 +476,7 @@ impl<TPuzzle: SemiGroupActionPuzzle> IterativeDeepeningSearch<TPuzzle> {
     fn apply_optional_fsm_moves(
         &self,
         start_state: CanonicalFSMState,
-        moves: &Option<Vec<Move>>,
+        moves: Option<&Vec<Move>>,
     ) -> Option<CanonicalFSMState> {
         let mut current_state = start_state;
         if let Some(moves) = moves {
@@ -533,9 +536,11 @@ impl<TPuzzle: SemiGroupActionPuzzle> IterativeDeepeningSearch<TPuzzle> {
         if self
             .apply_optional_fsm_moves(
                 current_state,
-                &individual_search_data
-                    .individual_search_options
-                    .canonical_fsm_post_moves,
+                CanonicalFSMSearchConstraints::post_moves(
+                    &individual_search_data
+                        .individual_search_options
+                        .fsm_constraints,
+                ),
             )
             .is_none()
         {
