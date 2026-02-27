@@ -185,11 +185,11 @@ impl SolvingBasedScrambleFinder for TwoPhase3x3x3ScrambleFinder {
                     (fmc_affix_alg.clone()),
                     search_pattern,
                     (fmc_affix_alg.clone()),
+                    Some(vec![parse_move!("R").to_owned()]),
                     Some(vec![parse_move!("F").to_owned()]),
-                    Some(vec![parse_move!("R'").to_owned()]),
                     // TODO: support a way to specify a quantum factor
-                    Some(vec![parse_move!("F2'").to_owned()]),
                     Some(vec![parse_move!("R2'").to_owned()]),
+                    Some(vec![parse_move!("F2'").to_owned()]),
                 )
             }
             TwoPhase3x3x3PrefixOrSuffixConstraints::ForBLD => {
