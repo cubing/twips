@@ -32,11 +32,11 @@ pub trait SolvingBasedScrambleFinder: ScrambleFinder {
 
     fn collapse_inverted_alg(&mut self, alg: Alg) -> Alg;
 
-    fn generate_fair_scramble(
+    fn derive_fair_filtered_pattern(
         &mut self,
         scramble_options: &Self::ScrambleOptions,
         derivation_seed: DerivationSeed,
-    ) -> Alg {
+    ) -> <<Self as ScrambleFinder>::TPuzzle as SemiGroupActionPuzzle>::Pattern {
         let mut i = 1;
         loop {
             let salt = format!("candidate{}", i);
@@ -50,11 +50,20 @@ pub trait SolvingBasedScrambleFinder: ScrambleFinder {
                 i += 1;
                 continue;
             }
-            // Since we got the pattern from the trait implementation, it should be safe to `.unwrap()` — else, the trait implementation is broken.
-            // TODO: are there any puzzles for which we may want to change this?
-            let inverse_scramble = self.solve_pattern(&pattern, scramble_options).unwrap();
-            return self.collapse_inverted_alg(inverse_scramble.invert());
+            return pattern;
         }
+    }
+
+    fn generate_fair_scramble(
+        &mut self,
+        scramble_options: &Self::ScrambleOptions,
+        derivation_seed: DerivationSeed,
+    ) -> Alg {
+        let pattern = self.derive_fair_filtered_pattern(scramble_options, derivation_seed);
+        // Since we got the pattern from the trait implementation, it should be safe to `.unwrap()` — else, the trait implementation is broken.
+        // TODO: are there any puzzles for which we may want to change this?
+        let inverse_scramble = self.solve_pattern(&pattern, scramble_options).unwrap();
+        self.collapse_inverted_alg(inverse_scramble.invert())
     }
 }
 
