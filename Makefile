@@ -1,11 +1,11 @@
+.PHONY: check
+check: lint test build
+
 .PHONY: build
 build: \
 	build-rust \
 	build-rust-wasm \
 	build-rust-ffi
-
-.PHONY: check
-check: lint test build
 
 .PHONY: setup
 setup: setup-js setup-gitignore-dirs setup-rust
