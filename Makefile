@@ -188,7 +188,7 @@ setup-js: setup-js-deps setup-gitignore-dirs
 
 .PHONY: setup-js-deps
 setup-js-deps: check-engine-versions
-	bun install --frozen-lockfile > /dev/null
+	bun install --frozen-lockfile
 
 .PHONY: lint-js
 lint-js: lint-js-biome lint-js-tsc lint-import-restrictions
