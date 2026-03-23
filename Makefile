@@ -185,7 +185,6 @@ publish-rust-ffi: setup-rust
 .PHONY: setup-js
 setup-js: setup-js-deps setup-gitignore-dirs
 
-
 .PHONY: setup-js-deps
 setup-js-deps: check-engine-versions
 	bun install --frozen-lockfile
