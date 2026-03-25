@@ -34,8 +34,6 @@ use super::{
     square1_shape_traversal_filter::shape_traversal_filter_pattern,
 };
 
-use lazy_static::lazy_static;
-
 // Note that this entire struct consists of single coordinate.
 // The fields themselves are more like "subcoordinates" rather than coordinates in themselves.
 // TODO: Implement automatic coordinate composition?
@@ -75,16 +73,14 @@ pub(crate) type Square1Phase1Puzzle =
 // TODO: allow flipping this depending on whether this is for a scramble (backwards) or a solution (forwards)?
 const D_SQ_MOVE_RESTRICTED_RANGE: Range<i32> = -3..3;
 
+const D_MOVE_CLASS_INDEX: MoveClassIndex = MoveClassIndex(1);
+
 // This is exported so it can be reused by phase 2.
 #[allow(non_snake_case)]
 pub fn restrict_D_move(
     move_transformation_info: &MoveTransformationInfo<Square1Phase1Puzzle>,
 ) -> bool {
-    lazy_static! {
-        // TODO: perform a one-time check that this matches the search generator indexing.
-        static ref D_MOVE_CLASS_INDEX: MoveClassIndex = MoveClassIndex(1);
-    }
-    if move_transformation_info.move_class_index != *D_MOVE_CLASS_INDEX {
+    if move_transformation_info.move_class_index != D_MOVE_CLASS_INDEX {
         return true;
     }
     let Move { amount, .. } = move_transformation_info.r#move;

@@ -2,8 +2,7 @@ use cubing::{
     alg::{parse_alg, parse_move, Alg, Move},
     kpuzzle::{InvalidAlgError, KPattern, KPuzzle, KPuzzleOrbitInfo},
 };
-use lazy_static::lazy_static;
-use std::cmp::max;
+use std::{cmp::max, sync::LazyLock};
 
 use crate::{
     _internal::{
@@ -107,22 +106,23 @@ pub(crate) struct Square0EquatorlessPattern {
     pub(crate) pattern: KPattern,
 }
 
+static WEDGES_ORBIT_INFO: LazyLock<&'static KPuzzleOrbitInfo> = LazyLock::new(|| {
+    let orbit_info: &'static KPuzzleOrbitInfo =
+        &square1_unbandaged_kpuzzle().data.ordered_orbit_info[0];
+    assert_eq!(orbit_info.name.0, "WEDGES");
+    orbit_info
+});
+
 const NUM_SQUARE0_EQUATORLESS_WEDGES: u8 = 8;
 impl Square0EquatorlessPattern {
     // TODO: define this as a static method instead and just output a `KPattern` instead of a `Square0EquatorlessCoordinate`? Or ideally add a type-safe way for coordinates to us different masks/conversions into the same coordinates (and tables).
     fn from_edges_pattern(square1_edges_pattern: &KPattern) -> Self {
-        lazy_static! {
-            static ref orbit_info: &'static KPuzzleOrbitInfo =
-                &square1_unbandaged_kpuzzle().data.ordered_orbit_info[0];
-        };
-        assert_eq!(orbit_info.name.0, "WEDGES"); // TODO: only do this at orbit info time, using the former pattern for retrieving an `OrbitInfo` from a definition.
-
         let mut square0_equatorless_pattern =
             square0_equatorless_kpuzzle().default_pattern().clone();
 
         let mut square0_equatorless_i = 0;
-        for square1_i in 0..orbit_info.num_pieces {
-            let piece = square1_edges_pattern.get_piece(&orbit_info, square1_i);
+        for square1_i in 0..WEDGES_ORBIT_INFO.num_pieces {
+            let piece = square1_edges_pattern.get_piece(*WEDGES_ORBIT_INFO, square1_i);
             let square0_piece = match piece {
                 // TODO: unify this with `WEDGE_TYPE_LOOKUP`?
                 0 => None,
@@ -153,7 +153,7 @@ impl Square0EquatorlessPattern {
             };
             if let Some(square0_piece) = square0_piece {
                 square0_equatorless_pattern.set_piece(
-                    &orbit_info,
+                    *WEDGES_ORBIT_INFO,
                     square0_equatorless_i,
                     square0_piece,
                 );
@@ -168,18 +168,12 @@ impl Square0EquatorlessPattern {
 
     // TODO: define this as a static method instead and just output a `KPattern` instead of a `Square0EquatorlessCoordinate`? Or ideally add a type-safe way for coordinates to us different masks/conversions into the same coordinates (and tables).
     fn from_corners_pattern(square1_corners_pattern: &KPattern) -> Self {
-        lazy_static! {
-            static ref orbit_info: &'static KPuzzleOrbitInfo =
-                &square1_unbandaged_kpuzzle().data.ordered_orbit_info[0];
-        };
-        assert_eq!(orbit_info.name.0, "WEDGES"); // TODO: only do this at orbit info time, using the former pattern for retrieving an `OrbitInfo` from a definition.
-
         let mut square0_equatorless_pattern =
             square0_equatorless_kpuzzle().default_pattern().clone();
 
         let mut square0_equatorless_i = 0;
-        for square1_i in 0..orbit_info.num_pieces {
-            let piece = square1_corners_pattern.get_piece(&orbit_info, square1_i);
+        for square1_i in 0..WEDGES_ORBIT_INFO.num_pieces {
+            let piece = square1_corners_pattern.get_piece(&WEDGES_ORBIT_INFO, square1_i);
             let square0_piece = match piece {
                 // TODO: unify this with `WEDGE_TYPE_LOOKUP`?
                 0 => Some(0),
@@ -210,7 +204,7 @@ impl Square0EquatorlessPattern {
             };
             if let Some(square0_piece) = square0_piece {
                 square0_equatorless_pattern.set_piece(
-                    &orbit_info,
+                    *WEDGES_ORBIT_INFO,
                     square0_equatorless_i,
                     square0_piece,
                 );
