@@ -3,7 +3,10 @@ use cubing::{alg::Alg, kpuzzle::KPuzzle};
 use crate::{
     _internal::errors::{ArgumentError, SearchError, TwipsError},
     scramble::{
-        puzzles::{baby_fto::BabyFTOScrambleFinder, megaminx::megaminx_solver::MegaminxSolver},
+        puzzles::{
+            baby_fto::BabyFTOScrambleFinder, fto::FTOScrambleFinder,
+            megaminx::megaminx_solver::MegaminxSolver,
+        },
         DerivationSeed, Puzzle,
     },
 };
@@ -138,7 +141,10 @@ pub fn derive_scramble_for_event(
             },
             derivation_seed,
         )), // TODO: represent multiple returned scrambles without affecting ergonomics for other events.
-        Event::FTOSpeedsolving => err,
+        Event::FTOSpeedsolving => Ok(generate_fair_scramble::<FTOScrambleFinder>(
+            &Default::default(),
+            derivation_seed,
+        )),
         Event::MasterTetraminxSpeedsolving => err,
         Event::KilominxSpeedsolving => Ok(generate_fair_scramble::<KilominxScrambleFinder>(
             &Default::default(),
@@ -204,6 +210,7 @@ fn solving_based_filter_and_search_with_no_scramble_options<
     options: &ExperimentalFilterAndOrSearchOptions,
     collapse_using_collapse_inverted_alg: bool,
 ) -> Result<Option<Alg>, TwipsError> {
+    dbg!("foo");
     solving_based_filter_and_search::<ScrambleFinder>(
         options,
         collapse_using_collapse_inverted_alg,
@@ -357,6 +364,9 @@ pub fn experimental_scramble_finder_filter_and_or_search(
                 suffix_constraints: BigCubeScrambleFinderSuffixConstraints::ForNoInspection,
             },
         ),
+        Event::FTOSpeedsolving => solving_based_filter_and_search_with_no_scramble_options::<
+            FTOScrambleFinder,
+        >(options, false),
         Event::KilominxSpeedsolving => solving_based_filter_and_search_with_no_scramble_options::<
             KilominxScrambleFinder,
         >(options, false),
@@ -364,7 +374,6 @@ pub fn experimental_scramble_finder_filter_and_or_search(
             BabyFTOScrambleFinder,
         >(options, false),
         Event::Cube3x3x3MultiBlind
-        | Event::FTOSpeedsolving
         | Event::MasterTetraminxSpeedsolving
         | Event::RediCubeSpeedsolving => Err(PuzzleError {
             description: format!(

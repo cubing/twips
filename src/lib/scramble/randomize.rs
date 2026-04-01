@@ -12,6 +12,7 @@ pub(crate) enum OrbitPermutationConstraint {
 pub(crate) enum OrbitOrientationConstraint {
     IgnoreAllOrientations,
     SumToZero,
+    AllZero, // TODO: `Preserve` instead?
     // TODO: this is a hack for the baby FTO def.
     // - Split the pieces into two sets: those in the specified vec, and the other pieces.
     // - If a piece is in an index belonging to the same set, its orientation must be even.
@@ -112,6 +113,10 @@ pub(crate) fn randomize_orbit<R: Rng>(
             }
             (Some(OrbitOrientationConstraint::SumToZero), _, true, _) => OrientationWithMod {
                 orientation: subtract_u8_mod(0, total_orientation, orbit_info.num_orientations),
+                orientation_mod: 0,
+            },
+            (Some(OrbitOrientationConstraint::AllZero), _, _, _) => OrientationWithMod {
+                orientation: 0,
                 orientation_mod: 0,
             },
             (_, Some(ConstraintForPiece0::KeepSolved), _, true) => OrientationWithMod {

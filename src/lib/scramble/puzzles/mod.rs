@@ -9,6 +9,7 @@ pub mod square1;
 pub mod two_phase_3x3x3_scramble_finder;
 
 pub mod baby_fto;
+pub mod fto;
 pub mod kilominx;
 
 pub mod canonicalizing_solved_kpattern_depth_filter;
