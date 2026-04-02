@@ -84,7 +84,7 @@ Note that:
 - Some events (`"333"`, `"pyram"`, `"unofficial-tetraminx"`) produce a single scramble alg. We will call these "monoscramble" events. (Note that such a scramble will usually correspond to a single "physical" puzzle, but this may not be true in general.) For these events:
   - The subevent ID (level 7) is the event ID.
   - The subevent scramble salt (level 8) is always `"sub1"`.
-  - Note that **all 9 levels of the hierarchy are still used**. This makes it easier for implementations ot be simple and correct.
+  - Note that **all 9 levels of the hierarchy are still used**. This makes it easier for implementations to be simple and correct.
 - Some events (3×3×3 Multi-Blind, Mini Guildford) contain multiple subevents or multiple subscrambles for a single subevent. In this case:
   - A scramble specification for each such event must define a list of subevents.
   - Each subevent ID (level 7) must be a monoscramble event ID.
