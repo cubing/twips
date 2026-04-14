@@ -21,7 +21,7 @@ indicatif = "0.18.2"
 instant = { version = "0.1.13", features = ["wasm-bindgen"] }
 multiset = "0.0.5"
 num-integer = "0.1.46"
-rand = "0.9.2"
+rand = "0.9.3"
 serde = { version = "1.0.228", features = ["derive", "rc"] }
 sha2 = "0.10.9"
 serde_json = "1.0.145"
