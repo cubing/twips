@@ -11,17 +11,18 @@ jobs:
       contents: write
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
       - run: rustup target add x86_64-apple-darwin
       - run: cargo build --target x86_64-apple-darwin --release
       - run: ./target/x86_64-apple-darwin/release/twips --help
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: twips.x86_64-apple-darwin
           path: ./target/x86_64-apple-darwin/release/twips
-      - run: mv ./target/x86_64-apple-darwin/release/twips twips.${{ github.ref_name }}.x86_64-apple-darwin
-      - uses: softprops/action-gh-release@v2
+      - run: mv ./target/x86_64-apple-darwin/release/twips twips.${{ github.ref_name
+          }}.x86_64-apple-darwin
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
           files: twips.${{ github.ref_name }}.x86_64-apple-darwin
 
@@ -30,17 +31,17 @@ jobs:
       contents: write
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
       - run: rustup toolchain list
       - run: make build-rust
       - run: ./target/release/twips --help
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: twips.aarch64-apple-darwin
           path: ./target/release/twips
       - run: mv ./target/release/twips twips.${{ github.ref_name }}.aarch64-apple-darwin
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
           files: twips.${{ github.ref_name }}.aarch64-apple-darwin
 
@@ -49,17 +50,18 @@ jobs:
       contents: write
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
       - run: rustup toolchain list
       - run: make build-rust
       - run: ./target/release/twips.exe --help
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: twips.x86_64-pc-windows
           path: ./target/release/twips.exe
-      - run: mv ./target/release/twips.exe twips.${{ github.ref_name }}.x86_64-pc-windows
-      - uses: softprops/action-gh-release@v2
+      - run: mv ./target/release/twips.exe twips.${{ github.ref_name
+          }}.x86_64-pc-windows
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
           files: twips.${{ github.ref_name }}.x86_64-pc-windows
 
@@ -68,17 +70,18 @@ jobs:
       contents: write
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
       - run: rustup toolchain list
       - run: make build-rust
       - run: ./target/release/twips.exe --help
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: twips.aarch64-pc-windows
           path: ./target/release/twips.exe
-      - run: mv ./target/release/twips.exe twips.${{ github.ref_name }}.aarch64-pc-windows
-      - uses: softprops/action-gh-release@v2
+      - run: mv ./target/release/twips.exe twips.${{ github.ref_name
+          }}.aarch64-pc-windows
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
           files: twips.${{ github.ref_name }}.aarch64-pc-windows
 
@@ -87,17 +90,18 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
       - run: rustup toolchain list
       - run: make build-rust
       - run: ./target/release/twips --help
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: twips.x86_64-unknown-linux-gnu
           path: ./target/release/twips
-      - run: mv ./target/release/twips twips.${{ github.ref_name }}.x86_64-unknown-linux-gnu
-      - uses: softprops/action-gh-release@v2
+      - run: mv ./target/release/twips twips.${{ github.ref_name
+          }}.x86_64-unknown-linux-gnu
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
           files: twips.${{ github.ref_name }}.x86_64-unknown-linux-gnu
 
@@ -106,16 +110,17 @@ jobs:
       contents: write
     runs-on: ubuntu-24.04-arm
     steps:
-      - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
       - run: rustup toolchain list
       - run: make build-rust
       - run: ./target/release/twips --help
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: twips.aarch64-unknown-linux-gnu
           path: ./target/release/twips
-      - run: mv ./target/release/twips twips.${{ github.ref_name }}.aarch64-unknown-linux-gnu
-      - uses: softprops/action-gh-release@v2
+      - run: mv ./target/release/twips twips.${{ github.ref_name
+          }}.aarch64-unknown-linux-gnu
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
           files: twips.${{ github.ref_name }}.aarch64-unknown-linux-gnu
