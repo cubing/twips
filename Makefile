@@ -198,7 +198,7 @@ lint-js-biome: setup-js
 
 .PHONY: lint-js-tsc
 lint-js-tsc: setup-js build-rust-wasm
-	bun x -- bun-dx --package typescript tsc -- --noEmit --project ./tsconfig.json
+	bun x -- bun-dx --package @typescript/native-preview tsgo -- --project ./tsconfig.json
 
 .PHONY: lint-import-restrictions
 lint-import-restrictions: build-rust-wasm
