@@ -30,11 +30,11 @@ RM_RF = bun -e 'process.argv.slice(1).map(p => process.getBuiltinModule("node:fs
 
 .PHONY: clean
 clean:
-	${RM_RF} ./.temp ./build ./dist ./src/js/generated-wasm/twips.* ./package-lock.json
+	${RM_RF} ./.temp ./dist
 
 .PHONY: reset
 reset: clean
-	${RM_RF} ./emsdk ./node_modules ./target ./.bin
+	${RM_RF} ./node_modules ./target ./.bin
 
 .PHONY: lint
 lint: lint-js lint-rust
