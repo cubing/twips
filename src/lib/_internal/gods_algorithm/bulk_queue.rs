@@ -89,10 +89,7 @@ impl<T> Iterator for BulkQueueIterator<T> {
         if let Some(leaf) = self.leaf_iterator.next() {
             return Some(leaf);
         }
-        self.leaf_iterator = match self.sublist_iterator.next() {
-            Some(leaf_iterator) => leaf_iterator.into_iter(),
-            None => return None,
-        };
+        self.leaf_iterator = self.sublist_iterator.next()?.into_iter();
         self.leaf_iterator.next()
     }
 }
