@@ -23,7 +23,7 @@ test-warning:
 	@echo "Warning: tests are slow to run right now."
 
 .PHONY: test-scripts
-test-scripts:
+test-scripts: setup-js
 	bun run -- 'script/cubing-def.ts' 2x2x2
 
 RM_RF = bun -e 'process.argv.slice(1).map(p => process.getBuiltinModule("node:fs").rmSync(p, {recursive: true, force: true, maxRetries: 5}))' --
