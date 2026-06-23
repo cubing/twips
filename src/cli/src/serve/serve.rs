@@ -213,8 +213,8 @@ pub async fn serve(serve_command_args: ServeCommandArgs) -> Result<(), TwipsErro
         "Starting `twips serve` on port 2023.
 Use with one of the following:
 
-- https://experiments.cubing.net/cubing.js/twsearch/text-ui.html
-- http://localhost:3333/experiments.cubing.net/cubing.js/twsearch/text-ui.html
+- https://experiments.cubing.net/cubing.js/twips/text-ui.html
+- http://localhost:3333/experiments.cubing.net/cubing.js/twips/text-ui.html
 "
     );
 
