@@ -29,6 +29,16 @@ pub fn cli_scramble(args: &ScrambleArgs) -> Result<(), TwipsError> {
             Instant::now() - current_scramble_start_time
         );
         println!("{}", scramble);
+        if matches!(args.print_link, Some(true)) {
+            eprintln!(
+                "{}",
+                experimental_twizzle_link(ExperimentalTwizzleLinkParameters {
+                    alg: Some(&scramble),
+                    puzzle: Some(event.puzzle().id()),
+                    ..Default::default()
+                })
+            );
+        }
         let elapsed_duration = Instant::now() - total_start_time;
         eprintln!(
             "Found {} scramble{} in {:?} so far (average: {:?} per scramble)",

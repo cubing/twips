@@ -358,6 +358,9 @@ pub struct ScrambleArgs {
     /// Amount of scrambles
     #[clap(long, default_value_t = 1)]
     pub amount: usize,
+
+    #[clap(long, default_value = "false")]
+    pub print_link: Option<bool>,
 }
 
 #[derive(Args, Debug)]
