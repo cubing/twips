@@ -29,7 +29,7 @@ pub fn cli_scramble(args: &ScrambleArgs) -> Result<(), TwipsError> {
             Instant::now() - current_scramble_start_time
         );
         println!("{}", scramble);
-        if matches!(args.print_link, Some(true)) {
+        if matches!(args.print_link_args.print_link, Some(true)) {
             eprintln!(
                 "{}",
                 experimental_twizzle_link(ExperimentalTwizzleLinkParameters {
@@ -88,7 +88,10 @@ pub fn cli_scramble_finder(args: &ScrambleFinderArgs) -> Result<(), TwipsError> 
             );
             let scramble = scramble.unwrap();
             println!("{}", scramble);
-            if matches!(scramble_finder_solve_args.print_link, Some(true)) {
+            if matches!(
+                scramble_finder_solve_args.print_link_args.print_link,
+                Some(true)
+            ) {
                 let link = experimental_twizzle_link(ExperimentalTwizzleLinkParameters {
                     setup: Some(scramble_setup_alg),
                     alg: Some(&scramble),
@@ -115,7 +118,7 @@ pub fn cli_solve_known_puzzle(
     .unwrap();
 
     println!("{}", solution);
-    if matches!(search_command_args.print_link, Some(true)) {
+    if matches!(search_command_args.print_link_args.print_link, Some(true)) {
         eprintln!(
             "{}",
             experimental_twizzle_link(ExperimentalTwizzleLinkParameters {

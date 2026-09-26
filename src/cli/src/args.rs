@@ -171,9 +171,8 @@ pub struct SolveKnownPuzzleCommandArgs {
     // TODO: support pattern input via file.
     pub scramble_setup_alg: Alg,
 
-    /// By default, the command prints a URL for the solution to `stderr`. Pass this to disable the URL printing functionality.
-    #[clap(long, default_value = "true")]
-    pub print_link: Option<bool>,
+    #[command(flatten)]
+    pub print_link_args: PrintLinkArgs,
 }
 
 fn puzzle_from_id(s: &str) -> Result<Puzzle, String> {
@@ -359,7 +358,13 @@ pub struct ScrambleArgs {
     #[clap(long, default_value_t = 1)]
     pub amount: usize,
 
-    #[clap(long, default_value = "false")]
+    #[command(flatten)]
+    pub print_link_args: PrintLinkArgs,
+}
+
+#[derive(Args, Debug)]
+pub struct PrintLinkArgs {
+    #[clap(long, default_value = "true")]
     pub print_link: Option<bool>,
 }
 
@@ -380,8 +385,8 @@ pub enum ScrambleFinderCommand {
 #[derive(Args, Debug)]
 // TODO: combine with `ScrambleFinderFilterArgs`?
 pub struct ScrambleFinderSearchArgs {
-    #[clap(long, default_value = "true")]
-    pub print_link: Option<bool>,
+    #[command(flatten)]
+    pub print_link_args: PrintLinkArgs,
 
     #[clap(long, default_value_t = false)]
     pub apply_filtering: bool,
