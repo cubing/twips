@@ -20,7 +20,8 @@ jobs:
         with:
           name: twips.x86_64-apple-darwin
           path: ./target/x86_64-apple-darwin/release/twips
-      - run: mv ./target/x86_64-apple-darwin/release/twips twips.${{ github.ref_name
+      - run:
+          mv ./target/x86_64-apple-darwin/release/twips twips.${{ github.ref_name
           }}.x86_64-apple-darwin
       - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
@@ -60,10 +61,10 @@ jobs:
           name: twips.x86_64-pc-windows
           path: ./target/release/twips.exe
       - run: mv ./target/release/twips.exe twips.${{ github.ref_name
-          }}.x86_64-pc-windows
+          }}.x86_64-pc-windows.exe
       - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
-          files: twips.${{ github.ref_name }}.x86_64-pc-windows
+          files: twips.${{ github.ref_name }}.x86_64-pc-windows.exe
 
   build-aarch64-pc-windows:
     permissions:
@@ -80,10 +81,10 @@ jobs:
           name: twips.aarch64-pc-windows
           path: ./target/release/twips.exe
       - run: mv ./target/release/twips.exe twips.${{ github.ref_name
-          }}.aarch64-pc-windows
+          }}.aarch64-pc-windows.exe
       - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda #v3.0.0
         with:
-          files: twips.${{ github.ref_name }}.aarch64-pc-windows
+          files: twips.${{ github.ref_name }}.aarch64-pc-windows.exe
 
   build-x86_64-unknown-linux-gnu:
     permissions:
