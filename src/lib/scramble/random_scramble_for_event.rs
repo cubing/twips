@@ -74,19 +74,28 @@ pub fn derive_scramble_for_event(
         )),
         Event::Cube5x5x5Speedsolving => Ok(generate_filtered_random_move_scramble::<
             Cube5x5x5ScrambleFinder,
-        >(&BigCubeScrambleFinderScrambleOptions {
-            suffix_constraints: BigCubeScrambleFinderSuffixConstraints::None,
-        })),
+        >(
+            &BigCubeScrambleFinderScrambleOptions {
+                suffix_constraints: BigCubeScrambleFinderSuffixConstraints::None,
+            },
+            derivation_seed,
+        )),
         Event::Cube6x6x6Speedsolving => Ok(generate_filtered_random_move_scramble::<
             Cube6x6x6ScrambleFinder,
-        >(&BigCubeScrambleFinderScrambleOptions {
-            suffix_constraints: BigCubeScrambleFinderSuffixConstraints::None,
-        })),
+        >(
+            &BigCubeScrambleFinderScrambleOptions {
+                suffix_constraints: BigCubeScrambleFinderSuffixConstraints::None,
+            },
+            derivation_seed,
+        )),
         Event::Cube7x7x7Speedsolving => Ok(generate_filtered_random_move_scramble::<
             Cube7x7x7ScrambleFinder,
-        >(&BigCubeScrambleFinderScrambleOptions {
-            suffix_constraints: BigCubeScrambleFinderSuffixConstraints::None,
-        })),
+        >(
+            &BigCubeScrambleFinderScrambleOptions {
+                suffix_constraints: BigCubeScrambleFinderSuffixConstraints::None,
+            },
+            derivation_seed,
+        )),
         Event::Cube3x3x3Blindfolded => Ok(generate_fair_scramble::<TwoPhase3x3x3ScrambleFinder>(
             &TwoPhase3x3x3ScrambleOptions {
                 prefix_or_suffix_constraints: TwoPhase3x3x3PrefixOrSuffixConstraints::ForBLD,
@@ -106,11 +115,14 @@ pub fn derive_scramble_for_event(
             derivation_seed,
         )),
         Event::ClockSpeedsolving => Ok(
-            generate_filtered_random_move_scramble::<ClockScrambleFinder>(&NoScrambleOptions {}),
+            generate_filtered_random_move_scramble::<ClockScrambleFinder>(
+                &NoScrambleOptions {},
+                derivation_seed,
+            ),
         ),
         Event::MegaminxSpeedsolving => Ok(generate_filtered_random_move_scramble::<
             MegaminxScrambleFinder,
-        >(&NoScrambleOptions {})),
+        >(&NoScrambleOptions {}, derivation_seed)),
         Event::PyraminxSpeedsolving => Ok(generate_fair_scramble::<PyraminxScrambleFinder>(
             &NoScrambleOptions {},
             derivation_seed,
@@ -129,9 +141,12 @@ pub fn derive_scramble_for_event(
         )),
         Event::Cube5x5x5Blindfolded => Ok(generate_filtered_random_move_scramble::<
             Cube5x5x5ScrambleFinder,
-        >(&BigCubeScrambleFinderScrambleOptions {
-            suffix_constraints: BigCubeScrambleFinderSuffixConstraints::ForNoInspection,
-        })),
+        >(
+            &BigCubeScrambleFinderScrambleOptions {
+                suffix_constraints: BigCubeScrambleFinderSuffixConstraints::ForNoInspection,
+            },
+            derivation_seed,
+        )),
         Event::Cube3x3x3MultiBlind => Ok(generate_fair_scramble::<TwoPhase3x3x3ScrambleFinder>(
             &TwoPhase3x3x3ScrambleOptions {
                 prefix_or_suffix_constraints: TwoPhase3x3x3PrefixOrSuffixConstraints::ForBLD,

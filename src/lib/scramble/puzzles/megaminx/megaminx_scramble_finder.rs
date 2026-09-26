@@ -1,12 +1,14 @@
 use cubing::alg::{parse_move, Alg, AlgNode, Move, Newline};
 use cubing::kpuzzle::{KPattern, KPuzzle};
-use rand::{rng, Rng};
+use rand::Rng;
 
 use crate::_internal::search::move_count::MoveCount;
+use crate::scramble::derive_scramble_for_event::DerivationSeedRng;
 use crate::scramble::puzzles::canonicalizing_solved_kpattern_depth_filter::{
     CanonicalizingSolvedKPatternDepthFilter,
     CanonicalizingSolvedKPatternDepthFilterConstructionParameters,
 };
+use crate::scramble::DerivationSeed;
 use crate::{
     _internal::search::filter::filtering_decision::FilteringDecision,
     scramble::{
@@ -73,8 +75,9 @@ impl RandomMoveScrambleFinder for MegaminxScrambleFinder {
     fn generate_unfiltered_random_move_scramble(
         &mut self,
         _scramble_options: &Self::ScrambleOptions,
+        candidate_derivation_seed: DerivationSeed,
     ) -> Alg {
-        let mut rng = rng();
+        let mut rng = DerivationSeedRng::new(candidate_derivation_seed);
         let mut alg_nodes = Vec::<AlgNode>::new();
 
         let r_array: [&Move; 2] = [parse_move!("R++"), parse_move!("R--")];

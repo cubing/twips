@@ -1,11 +1,16 @@
-use std::sync::{LazyLock, Mutex, RwLock};
+use std::{
+    str::FromStr,
+    sync::{LazyLock, Mutex, RwLock},
+};
 
 use cubing::{alg::Alg, kpuzzle::KPuzzle};
 use erased_set::ErasedSyncSet;
 
 use crate::{
     _internal::puzzle_traits::puzzle_traits::HasDefaultPattern,
-    scramble::{apply_flat_alg::apply_flat_alg, get_kpuzzle::GetKPuzzle},
+    scramble::{
+        apply_flat_alg::apply_flat_alg, get_kpuzzle::GetKPuzzle, DerivationSalt, DerivationSeed,
+    },
 };
 
 use super::scramble_finder::ScrambleFinder;
@@ -14,20 +19,31 @@ pub trait RandomMoveScrambleFinder: ScrambleFinder {
     fn generate_unfiltered_random_move_scramble(
         &mut self,
         scramble_options: &Self::ScrambleOptions,
+        candidate_derivation_seed: DerivationSeed,
     ) -> Alg;
 
     fn puzzle(&self) -> &Self::TPuzzle;
 
-    fn generate_filtered_random_move_scramble(
+    fn derive_filtered_random_move_scramble(
         &mut self,
         scramble_options: &Self::ScrambleOptions,
+        derivation_seed: DerivationSeed,
     ) -> Alg {
+        let mut i = 1;
         loop {
-            let scramble_alg = self.generate_unfiltered_random_move_scramble(scramble_options);
+            let salt = format!("candidate{}", i);
+            let salt = salt.as_str();
+            let candidate_derivation_seed =
+                derivation_seed.derive(&DerivationSalt::from_str(salt).unwrap());
+            let scramble_alg = self.generate_unfiltered_random_move_scramble(
+                scramble_options,
+                candidate_derivation_seed,
+            );
             let puzzle = self.puzzle();
             let pattern =
                 apply_flat_alg(puzzle, &puzzle.puzzle_default_pattern(), &scramble_alg).unwrap();
             if self.filter_pattern(&pattern, scramble_options).is_reject() {
+                i += 1;
                 continue;
             }
             return scramble_alg;
@@ -64,9 +80,11 @@ pub fn generate_filtered_random_move_scramble<
     ScrambleFinder: RandomMoveScrambleFinder + 'static + Sync + Send,
 >(
     scramble_options: &ScrambleFinder::ScrambleOptions,
+    derivation_seed: DerivationSeed,
 ) -> Alg {
-    RandomMoveScrambleFinderCacher::generate_filtered_random_move_scramble::<ScrambleFinder>(
+    RandomMoveScrambleFinderCacher::derive_filtered_random_move_scramble::<ScrambleFinder>(
         scramble_options,
+        derivation_seed,
     )
 }
 
@@ -103,13 +121,14 @@ impl RandomMoveScrambleFinderCacher {
         // scramble_finder.generate_fair_scramble(scramble_options)
     }
 
-    pub fn generate_filtered_random_move_scramble<
+    pub fn derive_filtered_random_move_scramble<
         ScrambleFinder: RandomMoveScrambleFinder + 'static + Sync + Send,
     >(
         scramble_options: &ScrambleFinder::ScrambleOptions,
+        derivation_seed: DerivationSeed,
     ) -> Alg {
         RandomMoveScrambleFinderCacher::map(|scramble_finder: &mut ScrambleFinder| {
-            scramble_finder.generate_filtered_random_move_scramble(scramble_options)
+            scramble_finder.derive_filtered_random_move_scramble(scramble_options, derivation_seed)
         })
     }
 

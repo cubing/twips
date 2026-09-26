@@ -2,16 +2,18 @@ use cubing::{
     alg::{parse_move, Alg, AlgNode, Move},
     kpuzzle::KPuzzle,
 };
-use rand::{rng, Rng};
+use rand::Rng;
 
 use crate::{
     _internal::search::move_count::MoveCount,
     scramble::{
+        derive_scramble_for_event::DerivationSeedRng,
         scramble_finder::{
             random_move_scramble_finder::RandomMoveScrambleFinder, scramble_finder::ScrambleFinder,
             solving_based_scramble_finder::NoScrambleOptions,
         },
         scramble_search::move_list_from_vec,
+        DerivationSeed,
     },
 };
 
@@ -101,8 +103,9 @@ impl RandomMoveScrambleFinder for ClockScrambleFinder {
     fn generate_unfiltered_random_move_scramble(
         &mut self,
         _scramble_options: &NoScrambleOptions,
+        candidate_derivation_seed: DerivationSeed,
     ) -> Alg {
-        let mut rng = rng();
+        let mut rng = DerivationSeedRng::new(candidate_derivation_seed);
         let mut alg_nodes = Vec::<AlgNode>::new();
 
         // TODO: implement `parse_quantum_move!(…)`?

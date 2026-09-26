@@ -5,7 +5,7 @@ use cubing::{
     kpuzzle::{KPattern, KPuzzle, OrientationWithMod},
 };
 use num_integer::Integer;
-use rand::{rng, seq::IndexedRandom, Rng};
+use rand::{seq::IndexedRandom, Rng};
 
 use crate::{
     _internal::{
@@ -17,10 +17,12 @@ use crate::{
         search::{filter::filtering_decision::FilteringDecision, move_count::MoveCount},
     },
     scramble::{
+        derive_scramble_for_event::DerivationSeedRng,
         scramble_finder::{
             random_move_scramble_finder::RandomMoveScrambleFinder, scramble_finder::ScrambleFinder,
         },
         scramble_search::move_list_from_vec,
+        DerivationSeed,
     },
 };
 
@@ -203,10 +205,11 @@ impl<TBigCube: BigCube> RandomMoveScrambleFinder for BigCubeScrambleFinder<TBigC
     fn generate_unfiltered_random_move_scramble(
         &mut self,
         scramble_options: &Self::ScrambleOptions,
+        candidate_derivation_seed: DerivationSeed,
     ) -> Alg {
         // TODO: globally cache generators and `canonical_fsm` for each puzzle.
         let mut current_fsm_state = CANONICAL_FSM_START_STATE;
-        let mut rng = rng();
+        let mut rng = DerivationSeedRng::new(candidate_derivation_seed);
         let mut nodes = Vec::<AlgNode>::default();
         for _ in 0..self.info.num_random_moves().0 {
             // TODO: we can forward-cache the valid move classes for each state instead of rejection sampling.
