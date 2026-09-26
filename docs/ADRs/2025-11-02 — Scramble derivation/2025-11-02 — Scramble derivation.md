@@ -14,7 +14,7 @@ A mechanism that allows generating unpredictable scrambles from a single competi
   - …
 - Generate entire extra attempts or extra scrambles for a given attempt.
 - Support known official and popular unofficial events without hacks.
-- Add new accountability features and ergonomic conveniences, without giving up on any current scramble accountability requirements.
+- Add new auditability features and ergonomic conveniences, without giving up on any current scramble auditability requirements.
 - Audit scramble program implementations for compliance without advanced solving algorithms.
 
 ## Decision
@@ -79,7 +79,7 @@ A given scramble pattern is derived from a *salt hierarchy*, which is a list of 
 Note that:
 
 - All ID and salt counters start with `1` (not `0`), matching the WCIF.
-- It is possible to generate an extra scramble for a round that is not bound to a specific scramble (`"e1"`), or one that is for a specific attempt (`"a1e1"`). The former allows scrambles to be generated and used (e.g. printed) the same way as they were with TNoodle, and the latter allows for innovation in scramble accountability and recording mechanisms.
+- It is possible to generate an extra scramble for a round that is not bound to a specific scramble (`"e1"`), or one that is for a specific attempt (`"a1e1"`). The former allows scrambles to be generated and used (e.g. printed) the same way as they were with TNoodle, and the latter allows for innovation in scramble auditability and recording mechanisms.
   - It is additionally possible to generate extra scrambles within an attempt, e.g. `"sub1e1"` for 3×3×3 Multi-Blind.
 - Some events (`"333"`, `"pyram"`, `"unofficial-tetraminx"`) produce a single scramble alg. We will call these "monoscramble" events. (Note that such a scramble will usually correspond to a single "physical" puzzle, but this may not be true in general.) For these events:
   - The subevent ID (level 7) is the event ID.
