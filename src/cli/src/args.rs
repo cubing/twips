@@ -523,7 +523,7 @@ pub struct BenchmarkArgs {
 }
 
 fn completions_for_shell(cmd: &mut clap::Command, generator: impl Generator) {
-    generate(generator, cmd, "twips", &mut stdout());
+    generate(generator, cmd, cmd.get_name().to_owned(), &mut stdout());
 }
 
 pub fn get_args() -> TwipsArgs {
