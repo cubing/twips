@@ -21,6 +21,7 @@ pub trait SemiGroupActionPuzzle: Debug + Clone {
 
     /********* Functions "defined on the move". ********/
 
+    // TODO: move this into something we pass into the `SearchGenerator` constructor?
     fn move_order(&self, r#move: &Move) -> Result<MoveCount, InvalidAlgError>;
 
     fn puzzle_transformation_from_move(
