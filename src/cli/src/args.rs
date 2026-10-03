@@ -276,6 +276,9 @@ pub struct CompletionsArgs {
     ///  source <(twips completions zsh) # zsh
     #[clap(verbatim_doc_comment, id = "SHELL")]
     shell: Shell,
+
+    #[clap(long)]
+    bin_name: Option<String>,
 }
 
 // TODO: support moves arg?
@@ -522,8 +525,17 @@ pub struct BenchmarkArgs {
     pub metric_args: MetricArgs,
 }
 
-fn completions_for_shell(cmd: &mut clap::Command, generator: impl Generator) {
-    generate(generator, cmd, cmd.get_name().to_owned(), &mut stdout());
+fn completions_for_shell(
+    cmd: &mut clap::Command,
+    generator: impl Generator,
+    bin_name: Option<String>,
+) {
+    generate(
+        generator,
+        cmd,
+        bin_name.unwrap_or_else(|| cmd.get_name().to_owned()),
+        &mut stdout(),
+    );
 }
 
 pub fn get_args() -> TwipsArgs {
@@ -531,7 +543,11 @@ pub fn get_args() -> TwipsArgs {
 
     let args = TwipsArgs::parse();
     if let CliCommand::Completions(completions_args) = args.command {
-        completions_for_shell(&mut command, completions_args.shell);
+        completions_for_shell(
+            &mut command,
+            completions_args.shell,
+            completions_args.bin_name,
+        );
         exit(0);
     };
 
