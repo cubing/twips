@@ -293,8 +293,8 @@ fn square1_tuple(U_SQ_amount: i32, D_SQ_amount: i32) -> Alg {
 #[allow(non_camel_case_types)]
 #[allow(clippy::upper_case_acronyms)]
 enum Square1Phase2Move {
-    U_SQ_(i32),
-    D_SQ_(i32),
+    U_SQ_(u8),
+    D_SQ_(u8),
     SLASH,
 }
 
