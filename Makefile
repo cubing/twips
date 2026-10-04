@@ -13,10 +13,15 @@ setup: setup-js setup-gitignore-dirs setup-rust
 .PHONY: test
 test: \
 	test-warning \
+	test-json-schemas \
 	test-rust \
 	test-rust-ffi \
 	benchmark-rust \
 	test-scripts
+
+.PHONY: test-json-schemas
+test-json-schemas: setup-js
+	bun run -- 'script/validate-json-schemas.ts'
 
 .PHONY: test-warning
 test-warning:

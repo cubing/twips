@@ -57,6 +57,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./.github/workflows/install-pinned-toolchains
       - run: make setup
+      - run: make test-json-schemas
       - run: make lint-js
 
   build-x86_64-apple-darwin:
