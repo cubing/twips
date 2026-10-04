@@ -297,11 +297,12 @@ where
         transformation_to_apply: &Self::Transformation,
         into_pattern: &mut Self::Pattern,
     ) -> bool {
-        let Some(pattern) = self.pattern_apply_transformation(pattern, transformation_to_apply)
+        // TODO: is it worth avoiding an implicit clone here vs. calling `self.pattern_apply_transformation(…)`?
+        let Some(pattern) = &self.data.move_application_table[*pattern][*transformation_to_apply]
         else {
             return false;
         };
-        *into_pattern = pattern;
+        *into_pattern = *pattern;
         true
     }
 }
