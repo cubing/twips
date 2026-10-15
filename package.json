@@ -13,7 +13,7 @@
     "cubing": ">=0.61.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^v2.3.2",
+    "@biomejs/biome": "^2.5.15",
     "@cubing/dev-config": ">=0.8.1",
     "@lgarron-bin/repo": ">=0.15.0",
     "@optique/core": "^0.8.1",
