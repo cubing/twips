@@ -6,7 +6,7 @@ import {
   wasmFreeMemoryForAllScrambleFinders as rawWasmFreeMemoryForAllScrambleFinders,
   wasmRandomScrambleForEvent as rawWasmRandomScrambleForEvent,
   wasmTwips as rawWasmTwips,
-} from "../../.temp/rust-wasm/twips_wasm";
+} from "../../.temp/rust-wasm/twips_wasm.js";
 
 let cachedInitWrapper: Promise<void> | undefined;
 async function initWrapper(): Promise<void> {

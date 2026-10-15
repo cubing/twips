@@ -5,8 +5,8 @@
  *
  */
 
-import { derive } from "./derive";
-import { expectEqual, fromASCII, fromHex } from "./helpers";
+import { derive } from "./derive.ts";
+import { expectEqual, fromASCII, fromHex } from "./helpers.ts";
 
 export async function deriveHierarchy(
   parentDerivationSeed: ArrayBuffer,

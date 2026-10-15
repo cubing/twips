@@ -1,5 +1,5 @@
-import { derive } from "./derive";
-import { fromASCII, toHex } from "./helpers";
+import { derive } from "./derive.ts";
+import { fromASCII, toHex } from "./helpers.ts";
 
 function randomServerSaltChar(): string {
   const byte = new Uint8Array(1);

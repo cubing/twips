@@ -16,6 +16,6 @@ twips = { version = "0.12.5-dev", path = "./src/lib/" }
 [workspace.metadata.bin]
 cbindgen = { version = "0.27.0" }
 cargo-binstall = { version = "1.4.4" }
-wasm-pack = { version = "0.13.1" }
+wasm-pack = { version = "0.15.0" }
 # Doesn't work: https://github.com/bnjbvr/cargo-machete/issues/62
 # cargo-machete = { version = "0.9.1" }

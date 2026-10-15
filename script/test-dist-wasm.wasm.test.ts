@@ -6,7 +6,7 @@ import {
   wasmFreeMemoryForAllScrambleFinders,
   wasmRandomScrambleForEvent,
   wasmTwips,
-} from "../dist/wasm/index";
+} from "../dist/wasm/index.js";
 
 test("wasmRandomScrambleForEvent(…)", async () => {
   for (const eventID of [

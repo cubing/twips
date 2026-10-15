@@ -1,4 +1,4 @@
-import { concat, SHA256, validate } from "./helpers";
+import { concat, SHA256, validate } from "./helpers.ts";
 
 export async function derive(
   parentDerivationSeed: ArrayBuffer /* 32 bytes */,

@@ -9,7 +9,7 @@
  */
 
 import { writeFile } from "node:fs/promises";
-import { toHex } from "./helpers";
+import { toHex } from "./helpers.ts";
 
 const NUM_SHARDS = 1024;
 const ARRAY_BUFFER_LENGTH = 32;
