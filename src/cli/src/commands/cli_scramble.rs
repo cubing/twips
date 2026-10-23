@@ -55,7 +55,12 @@ pub fn cli_scramble(args: &ScrambleArgs) -> Result<(), TwipsError> {
 // TODO: refactor this once `experimental_scramble_finder_filter_and_or_search` can support a less gnarly API.
 pub fn cli_scramble_finder(args: &ScrambleFinderArgs) -> Result<(), TwipsError> {
     let (filter_args, apply_filtering, perform_search) = match &args.command {
-        ScrambleFinderCommand::Search(scramble_finder_solve_args) => (
+        ScrambleFinderCommand::Solve(scramble_finder_solve_args) => (
+            &scramble_finder_solve_args.filter_args,
+            scramble_finder_solve_args.apply_filtering,
+            true,
+        ),
+        ScrambleFinderCommand::Generate(scramble_finder_solve_args) => (
             &scramble_finder_solve_args.filter_args,
             scramble_finder_solve_args.apply_filtering,
             true,
@@ -81,19 +86,38 @@ pub fn cli_scramble_finder(args: &ScrambleFinderArgs) -> Result<(), TwipsError> 
     )?;
 
     match &args.command {
-        ScrambleFinderCommand::Search(scramble_finder_solve_args) => {
+        ScrambleFinderCommand::Solve(scramble_finder_solve_args) => {
             eprintln!(
-                "// Scramble found in: {:?}",
+                "// Scramble solution found in: {:?}",
                 Instant::now() - current_scramble_start_time
             );
-            let scramble = scramble.unwrap();
-            println!("{}", scramble);
+            let inverse_scramble = scramble.unwrap();
+            println!("{}", inverse_scramble);
             if matches!(
                 scramble_finder_solve_args.print_link_args.print_link,
                 Some(true)
             ) {
                 let link = experimental_twizzle_link(ExperimentalTwizzleLinkParameters {
                     setup: Some(scramble_setup_alg),
+                    alg: Some(&inverse_scramble),
+                    puzzle: Some(event.puzzle().id()),
+                    ..Default::default()
+                });
+                println!("{}", link);
+            }
+        }
+        ScrambleFinderCommand::Generate(scramble_finder_solve_args) => {
+            eprintln!(
+                "// Scramble found in: {:?}",
+                Instant::now() - current_scramble_start_time
+            );
+            let scramble = scramble.unwrap().invert();
+            println!("{}", scramble);
+            if matches!(
+                scramble_finder_solve_args.print_link_args.print_link,
+                Some(true)
+            ) {
+                let link = experimental_twizzle_link(ExperimentalTwizzleLinkParameters {
                     alg: Some(&scramble),
                     puzzle: Some(event.puzzle().id()),
                     ..Default::default()

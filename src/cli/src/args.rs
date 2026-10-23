@@ -380,7 +380,9 @@ pub struct ScrambleFinderArgs {
 #[derive(Subcommand, Debug)]
 pub enum ScrambleFinderCommand {
     /// Search for a solution to the given setup alg.
-    Search(ScrambleFinderSearchArgs),
+    Solve(ScrambleFinderSearchArgs),
+    /// Search for an alg that produces the same pattern as the setup alg.
+    Generate(ScrambleFinderSearchArgs),
     /// Run the filter on the given setup alg.
     Filter(ScrambleFinderFilterArgs),
 }
