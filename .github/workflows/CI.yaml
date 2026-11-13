@@ -8,7 +8,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: ./.github/workflows/install-pinned-toolchains
+      - uses: $/.github/workflows/install-pinned-toolchains
       - uses: Swatinem/rust-cache@v2.9.1
       - run: make build-rust
       - run: make test-rust-build-help
@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: ./.github/workflows/install-pinned-toolchains
+      - uses: $/.github/workflows/install-pinned-toolchains
       - uses: Swatinem/rust-cache@v2.9.1
       - run: make build-rust-ffi
       - run: make test-rust-ffi
@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: ./.github/workflows/install-pinned-toolchains
+      - uses: $/.github/workflows/install-pinned-toolchains
       - uses: Swatinem/rust-cache@v2.9.1
       - run: make setup
       - run: make build-rust-wasm
@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: ./.github/workflows/install-pinned-toolchains
+      - uses: $/.github/workflows/install-pinned-toolchains
       - uses: Swatinem/rust-cache@v2.9.1
       - run: make setup
       - run: make build-rust
@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: ./.github/workflows/install-pinned-toolchains
+      - uses: $/.github/workflows/install-pinned-toolchains
       - run: make setup
       - run: make lint-js
 
