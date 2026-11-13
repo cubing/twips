@@ -21,7 +21,7 @@ A mechanism that allows generating unpredictable scrambles from a single competi
 
 ### Derivation seeds
 
-Derivation will involve *32-byte derivation seed* values as follows:
+Derivation will involve _32-byte derivation seed_ values as follows:
 
 | Byte index | Role                                     |
 | ---------- | ---------------------------------------- |
@@ -55,26 +55,25 @@ async function derive(parentDerivationSeed, salt) {
 
   return intermediate.buffer;
 }
-
 ```
 
 Associated file: [`derive.ts`](./derive.ts)
 
 ### Salt hierarchy
 
-A given scramble pattern is derived from a *salt hierarchy*, which is a list of salts where each salt is an ASCII byte string of arbitrary length. For the initial protocol, the hierarchy is the following list:
+A given scramble pattern is derived from a _salt hierarchy_, which is a list of salts where each salt is an ASCII byte string of arbitrary length. For the initial protocol, the hierarchy is the following list:
 
-| Level | Meaning | Example values |
-|-|-|-|
-| 1 | Auditor salt (see below) | `"X]LJ…@VKK"` (64 ASCII characters) |
-| 2 | Purpose | `"scrambles"` |
-| 3 | Event ID | `"333"`, `"333mbf"`, `"unofficial-guildford"` |
-| 4 | Round ID (per [WCIF](https://github.com/thewca/wcif/blob/d8321491178738a62c62f7c4f9ae7cd3f340a4ea/specification.md#round)) | `"r1"`, `"r2"` |
-| 5 | Group ID (part of a [WCIF activity code](https://github.com/thewca/wcif/blob/d8321491178738a62c62f7c4f9ae7cd3f340a4ea/specification.md#ActivityCode)) | `"g1"`, `"g2"` |
-| 6 | Attempt ID (generalization of part of a [WCIF activity code](https://github.com/thewca/wcif/blob/d8321491178738a62c62f7c4f9ae7cd3f340a4ea/specification.md#ActivityCode)) | `"a1"`, `"e1"`, `"a1e1"` |
-| 7 | Subevent ID | `"333"`, `"222"` |
-| 8 | Subevent scramble salt | `"sub1"`, `"sub1e1"` |
-| 9 | Scramble filtering candidate salt | `"candidate1"`, `"candidate2"` |
+| Level | Meaning                                                                                                                                                                   | Example values                                |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| 1     | Auditor salt (see below)                                                                                                                                                  | `"X]LJ…@VKK"` (64 ASCII characters)           |
+| 2     | Purpose                                                                                                                                                                   | `"scrambles"`                                 |
+| 3     | Event ID                                                                                                                                                                  | `"333"`, `"333mbf"`, `"unofficial-guildford"` |
+| 4     | Round ID (per [WCIF](https://github.com/thewca/wcif/blob/d8321491178738a62c62f7c4f9ae7cd3f340a4ea/specification.md#round))                                                | `"r1"`, `"r2"`                                |
+| 5     | Group ID (part of a [WCIF activity code](https://github.com/thewca/wcif/blob/d8321491178738a62c62f7c4f9ae7cd3f340a4ea/specification.md#ActivityCode))                     | `"g1"`, `"g2"`                                |
+| 6     | Attempt ID (generalization of part of a [WCIF activity code](https://github.com/thewca/wcif/blob/d8321491178738a62c62f7c4f9ae7cd3f340a4ea/specification.md#ActivityCode)) | `"a1"`, `"e1"`, `"a1e1"`                      |
+| 7     | Subevent ID                                                                                                                                                               | `"333"`, `"222"`                              |
+| 8     | Subevent scramble salt                                                                                                                                                    | `"sub1"`, `"sub1e1"`                          |
+| 9     | Scramble filtering candidate salt                                                                                                                                         | `"candidate1"`, `"candidate2"`                |
 
 Note that:
 
@@ -112,7 +111,9 @@ export async function deriveHierarchy(parentDerivationSeed, saltHierarchy) {
   return derivationSeed;
 }
 
-const rootSeed = fromHex("67002dfc95e6d4288f418fbaa9150aa65b239fd5581f2d067d0293b9321a8b67");
+const rootSeed = fromHex(
+  "67002dfc95e6d4288f418fbaa9150aa65b239fd5581f2d067d0293b9321a8b67",
+);
 const roundSeed = await deriveHierarchy(rootSeed, [
   fromASCII("EBNLEND@MABLNHJFHGFEKFIA@DNBKABHHNANA@FD@KKADJAKNFCIJNJGIFCBLEDF"), // auditor salt
   fromASCII("scrambles"),
@@ -125,7 +126,10 @@ const roundSeed = await deriveHierarchy(rootSeed, [
   fromASCII("candidate1"),
 ]);
 
-expectEqual(roundSeed, fromHex("67090777cf85e259361b2035023b0fbbbb478cc38c5d174926509ee82ec0431b"));
+expectEqual(
+  roundSeed,
+  fromHex("67090777cf85e259361b2035023b0fbbbb478cc38c5d174926509ee82ec0431b"),
+);
 ```
 
 Associated file: [`deriveHierarchy.ts`](./deriveHierarchy.ts)
@@ -143,8 +147,8 @@ Steps:
 2. The generator computes `generatorCommitmentHash = derive(rootCompetitionSeed, "commitment")`
 3. The generator sends `generatorCommitmentHash` to the auditor.
 4. The auditor generates a 64-byte `auditorSalt`, where each byte is independently generated by concatenating `0x0100` with a (cryptographically strong) random [nybble](https://en.wikipedia.org/wiki/Nibble#History).
-    - Note: this allows the auditor salt to be safely treated as an ASCII string that contains only printable characters (which is easily serialized), while keeping 256 bits of entropy.
-    - The auditor may wish to sign and/or publish this salt along with the `generatorCommitmentHash` and a timestamp, to provide a ["not before"](https://en.wikipedia.org/wiki/Public_key_certificate#Common_fields) certification for when the generator gained the ability to derive the `competitionSeed`. That is outside the scope of this specification.
+   - Note: this allows the auditor salt to be safely treated as an ASCII string that contains only printable characters (which is easily serialized), while keeping 256 bits of entropy.
+   - The auditor may wish to sign and/or publish this salt along with the `generatorCommitmentHash` and a timestamp, to provide a ["not before"](https://en.wikipedia.org/wiki/Public_key_certificate#Common_fields) certification for when the generator gained the ability to derive the `competitionSeed`. That is outside the scope of this specification.
 5. The auditor sends `auditorSalt` to the generator.
 6. The generator computes `competitionSeed = derive(rootSeed, auditorSalt)`
 
