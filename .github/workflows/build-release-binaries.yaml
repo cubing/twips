@@ -20,7 +20,7 @@ jobs:
         with:
           name: twips.x86_64-apple-darwin
           path: ./target/x86_64-apple-darwin/release/twips
-      - run: mv ./target/x86_64-apple-darwin/release/twips twips.${{ github.ref_name  }}.x86_64-apple-darwin
+      - run: mv ./target/x86_64-apple-darwin/release/twips twips.${{ github.ref_name }}.x86_64-apple-darwin
       - uses: softprops/action-gh-release@v3.0.0
         with:
           files: twips.${{ github.ref_name }}.x86_64-apple-darwin
