@@ -86,6 +86,7 @@ publish-rust-main:
 
 .PHONY: setup-rust
 setup-rust: setup-gitignore-dirs
+	cargo fetch
 
 # Rust testing
 
